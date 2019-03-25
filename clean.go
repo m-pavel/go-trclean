@@ -65,7 +65,7 @@ func main() {
 			}
 		}
 	}
-	fmt.Printf("Orphans %d of %d\n")
+	fmt.Printf("Orphans %d of %d\n", totalo, totalf)
 }
 
 func tname(file string) (string, error) {
