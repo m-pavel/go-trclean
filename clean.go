@@ -9,22 +9,22 @@ import (
 
 	"strings"
 
-	"fmt"
-
 	"github.com/anacrolix/torrent/bencode"
 	"github.com/anacrolix/torrent/metainfo"
 )
 
 func main() {
 	dryRun := true
+	log.SetFlags(log.Lshortfile | log.Ltime)
 	if len(os.Args) != 3 && len(os.Args) != 4 {
-		fmt.Println("First argument - download directory, second argument torrents directory, third - dry run by default true")
+		log.Println("First argument - download directory, second argument torrents directory, third - dry run by default true")
 		return
 	}
 	if len(os.Args) == 4 {
 		dryRun = false
 	}
-	files, err := ioutil.ReadDir(os.Args[1])
+	dir := os.Args[2]
+	files, err := ioutil.ReadDir(dir)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -32,16 +32,17 @@ func main() {
 	torrents := make([]string, 0)
 	for _, f := range files {
 		if strings.HasSuffix(f.Name(), ".torrent") {
-			tnm, err := tname(path2.Join(os.Args[2], f.Name()))
-			if err != nil {
+			tnm, err := tname(path2.Join(dir, f.Name()))
+			if err == nil {
 				torrents = append(torrents, tnm)
 			} else {
-				fmt.Println(err)
+				log.Println(err)
 			}
 		}
 	}
 
-	files, err = ioutil.ReadDir(os.Args[1])
+	dir = os.Args[1]
+	files, err = ioutil.ReadDir(dir)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -59,13 +60,13 @@ func main() {
 		if !found {
 			totalo = totalo + 1
 			if dryRun {
-				fmt.Printf("Orphan %s\n", f.Name())
+				log.Printf("Orphan %s\n", f.Name())
 			} else {
-				fmt.Printf("Removed orphan %s\n", f.Name())
+				log.Printf("Removed orphan %s\n", f.Name())
 			}
 		}
 	}
-	fmt.Printf("Orphans %d of %d\n", totalo, totalf)
+	log.Printf("Orphans %d of %d\n", totalo, totalf)
 }
 
 func tname(file string) (string, error) {
