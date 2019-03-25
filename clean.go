@@ -46,6 +46,8 @@ func main() {
 		log.Fatal(err)
 	}
 
+	totalf := len(files)
+	totalo := 0
 	for _, f := range files {
 		found := false
 		for i := range torrents {
@@ -55,6 +57,7 @@ func main() {
 			}
 		}
 		if !found {
+			totalo = totalo + 1
 			if dryRun {
 				fmt.Printf("Orphan %s\n", f.Name())
 			} else {
@@ -62,6 +65,7 @@ func main() {
 			}
 		}
 	}
+	fmt.Printf("Orphans %d of %d\n")
 }
 
 func tname(file string) (string, error) {
