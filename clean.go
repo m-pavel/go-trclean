@@ -19,6 +19,7 @@ func main() {
 	dryRun := true
 	if len(os.Args) != 3 && len(os.Args) != 4 {
 		fmt.Println("First argument - download directory, second argument torrents directory, third - dry run by default true")
+		return
 	}
 	if len(os.Args) == 4 {
 		dryRun = false
@@ -55,9 +56,9 @@ func main() {
 		}
 		if !found {
 			if dryRun {
-				fmt.Printf("Orphan %s", f.Name())
+				fmt.Printf("Orphan %s\n", f.Name())
 			} else {
-				fmt.Printf("Removed orphan %s", f.Name())
+				fmt.Printf("Removed orphan %s\n", f.Name())
 			}
 		}
 	}
